@@ -1,3 +1,14 @@
+/**
+ * Simple Shutdown Timer for Windows.
+ * Written by: Joshua Paylaga
+ *
+ * Emails: joshuapaylaga@gmail.com | joshua@greyboxsolutions.co
+ * Website: http://greyboxsolutions.co/
+ * Skype: jpaylaga
+ *
+ * Thank you :)
+ */
+
 #include<stdio.h>
 
 #define HOUR 3600
@@ -13,6 +24,7 @@ int shutdown(int h, int m, int s);
 int calculate_seconds(int h, int m, int s);
 
 int main() {
+
     int h = 0;
     int m = 0;
     int s = 0;
@@ -24,16 +36,24 @@ int main() {
     scanf_int("Minute(s): " , &m);
     scanf_int("Seconds(s): ", &s);
 
-    if ( shutdown(h, m, s) == 1) {
-        printf("\nYour computer will shutdown in %d:%d:%d.\n\n", h, m, s);
-        system("pause");
+    if ((h >= 0) && (m >= 0 && m < 60) && (s >= 0 && s < 60)) {
+        if ( shutdown(h, m, s) == 1) {
+            printf("\nYour computer will shutdown in %d:%d:%d.\n\n", h, m, s);
+            system("pause");
+        } else {
+            printf("\nThis program is intended only for Windows Machine.\n\n");
+        }
     } else {
-        printf("\nThis program is intended only for Windows Machine.\n\n");
+        printf("\nInvalid time provided.\n\n");
     }
 
     return 0;
 }
 
+/**
+ * Accepts input from user and prevent run-time breakage
+ * due to NULL input or wrong data type input.
+ */
 void scanf_int(char *q, int *n) {
     printf("%s", q);
     char buf[40];
@@ -46,6 +66,12 @@ void scanf_int(char *q, int *n) {
     }
 }
 
+/**
+ * Shuts down your computer within the time given.
+ * It utilizes the windows command shutdown /s /f /t {seconds}
+ * to initialize shutdown. This will not work if compiled to
+ * other operating systems.
+ */
 int shutdown(int h, int m, int s) {
     int success = 0;
     if (IS_WINDOWS == 1) {
@@ -58,6 +84,9 @@ int shutdown(int h, int m, int s) {
     return success;
 }
 
+/**
+ * Converts h:m:s time to seconds.
+ */
 int calculate_seconds(int h, int m, int s) {
     int h_to_s = HOUR * h;
     int m_to_s = MINUTE * m;
